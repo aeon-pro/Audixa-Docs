@@ -1,0 +1,160 @@
+---
+title: Voice Library
+sidebar_position: 4
+---
+
+# Voice Library
+
+Explore the voices available in Audixa AI. You can view the full, up-to-date list of voices in your dashboard or fetch them programmatically using the API.
+
+The `Voice ID` for each voice is used as the `voice` parameter in your [API requests](/getting-started/first-request).
+
+---
+
+## View Voices in the Dashboard
+
+For a visual and searchable list of all available voices, and their details, please visit the Voices page in your Audixa AI dashboard. This is the easiest way to find the perfect voice for your needs.
+
+**[Explore Voices in the Dashboard](https://audixa.ai/dashboard/library) ↗**
+
+---
+
+## Fetch Voices Programmatically
+
+In addition to the dashboard, you can programmatically fetch the most up-to-date list of all voices available to your account by querying the `/voices` endpoint. This is useful for integrating voice selection directly into your application.
+
+### API Endpoint
+
+To get the list of all available voices, send a `GET` request to the following endpoint:
+
+```
+
+GET https://api.audixa.ai/v2/voices
+
+````
+
+---
+
+### Required Headers
+
+```http
+x-api-key: YOUR_API_KEY
+````
+
+-----
+
+### Query Parameters
+
+| Parameter | Type   | Description                                                        |
+| :-------- | :----- | :----------------------------------------------------------------- |
+| `model`   | string | **Required.** The model you want to fetch voices for. Example: `base`. |
+
+-----
+
+### Code Examples
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="language">
+<TabItem value="curl" label="cURL" default>
+
+```bash
+# Make sure to replace YOUR_API_KEY with your actual key
+curl -X GET "https://api.audixa.ai/v2/voices?model=base" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api.audixa.ai/v2/voices"
+headers = {
+    "x-api-key": "YOUR_API_KEY"
+}
+params = {
+    "model": "base"
+}
+
+response = requests.get(url, headers=headers, params=params)
+
+if response.status_code == 200:
+  data = response.json()
+  print(data['voices']) # This will be a list of voice objects
+else:
+  print(f"Error: {response.status_code}")
+  print(response.json())
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript">
+
+```js
+// This code is intended for a backend Node.js environment.
+// Remember to protect your API key as warned in the previous guide.
+
+const getVoices = async () => {
+  const url = new URL("https://api.audixa.ai/v2/voices");
+  url.searchParams.append("model", "base");
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-api-key": "YOUR_API_KEY", // Keep this key on your server
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log(result.voices); // This will be an array of voice objects
+    return result;
+
+  } catch (error) {
+    console.error("Failed to fetch voices:", error);
+  }
+};
+
+getVoices();
+```
+
+</TabItem>
+</Tabs>
+
+-----
+
+### Example Response
+
+A successful request returns a JSON object containing your `user_id`, the specified `model`, and a `voices` list containing all available voice objects for your account.
+
+```json
+{
+  "user_id": "user_abc_12345",
+  "model": "base",
+  "voices": [
+    {
+      "voice_id": "am_2riuownnf",
+      "name": "Ethan",
+      "gender": "Male",
+      "accent": "American",
+      "free": true,
+      "description": "VoiceID: am_2riuownnf"
+    },
+    {
+      "voice_id": "af_3kbq21leo",
+      "name": "Lily",
+      "gender": "Female",
+      "accent": "American",
+      "free": true,
+      "description": "VoiceID: af_3kbq21leo"
+    }
+    // ...and so on for all other available voices
+  ]
+}
+```

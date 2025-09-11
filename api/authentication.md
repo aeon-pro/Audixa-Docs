@@ -1,0 +1,40 @@
+---
+title: Authentication
+id: authentication
+---
+
+# Authentication
+
+To use the Audixa API, you need an API key. This key authenticates and authorizes your requests to our servers.
+
+---
+
+## Where to Get Your API Key
+
+1. Go to the [Audixa Dashboard](https://audixa.ai/dashboard/api).
+2. Sign up or log in to your account.
+3. Navigate to the **API** section.
+4. Click Regenerate
+5. Copy your unique API key.
+
+---
+
+## How to Use Your API Key
+
+Include your API key in the request headers using the `x-api-key` field.
+
+### Required Header
+
+```http
+x-api-key: YOUR_API_KEY
+```
+
+:::info
+## Security Best Practices
+
+- Keep your API key **private**. Never expose it in frontend code (JS, mobile apps, etc.).
+- Store it in a secure environment variable or secret manager on your server.
+- If you believe your key has been compromised, you can regenerate it from the dashboard.
+:::
+---
+

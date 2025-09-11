@@ -1,0 +1,202 @@
+---
+id: status
+title: TTS Status
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+After you submit a generation task using the [`POST /tts`](./tts) endpoint, you must use this endpoint to check the job's status.
+
+This process is called **polling**. You should make requests to this endpoint periodically (e.g., every 1-2 seconds) with the `generation_id` you received.
+
+When the job is finished, the `status` field will change from `"Generating"` to `"Completed"`, and the response body will contain the `audio_url`.
+
+---
+
+## Base URL
+
+```
+
+https://api.audixa.ai/v2
+
+````
+
+## Request
+## <span className="badge badge--secondary">GET</span> `/status`
+
+---
+
+## Query Parameters
+
+Unlike the `/tts` endpoint, this request does not take a JSON body. Instead, it requires the generation ID to be passed as a URL query parameter.
+
+| Parameter         | Type   | Required | Description                                                  |
+| :---------------- | :----- | :------- | :----------------------------------------------------------- |
+| **`generation_id`** | string | Yes      | The unique ID that was returned from your `POST /tts` request. |
+
+---
+
+## Code Examples
+
+<Tabs groupId="language">
+  <TabItem value="curl" label="cURL" default>
+
+```bash
+# Replace YOUR_GENERATION_ID with the ID you received
+# Replace YOUR_API_KEY with your actual key
+
+curl -X GET "https://api.audixa.ai/v2/status?generation_id=YOUR_GENERATION_ID" \
+     -H "x-api-key: YOUR_API_KEY"
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+import time
+
+api_url = "https://api.audixa.ai/v2/status"
+api_key = "YOUR_API_KEY"
+generation_id = "YOUR_GENERATION_ID"  # The ID you got from the /tts request
+
+headers = {
+    "x-api-key": api_key
+}
+params = {
+    "generation_id": generation_id
+}
+
+while True:
+    response = requests.get(api_url, headers=headers, params=params)
+    
+    if response.status_code == 200:
+        result = response.json()
+        status = result.get("status")
+        
+        if status == "Completed":
+            print("Generation finished!")
+            print(f"Audio URL: {result.get('audio_url')}")
+            break
+        elif status == "Failed":
+            print("Generation failed.")
+            break
+        else:
+            print("Status is 'Generating'... waiting 2 seconds.")
+            time.sleep(2)
+    else:
+        print(f"Error: {response.status_code}")
+        print(response.json())
+        break
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript (Node.js)">
+
+```js
+// This code must be run in a secure backend environment
+
+const fetch = require('node-fetch'); // or use native fetch in Node 18+
+
+const API_KEY = "YOUR_API_KEY";
+const GENERATION_ID = "YOUR_GENERATION_ID"; // The ID from the /tts request
+
+const checkStatus = async (genId) => {
+    const url = new URL("https://api.audixa.ai/v2/status");
+    url.searchParams.append("generation_id", genId);
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: { "x-api-key": API_KEY }
+        });
+
+        if (!response.ok) {
+            console.error(`HTTP Error: ${response.status}`);
+            console.error(await response.json());
+            return null;
+        }
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Request failed:", error);
+        return null;
+    }
+};
+
+// Example of a poller function
+const pollForResult = async (genId) => {
+    let result = await checkStatus(genId);
+
+    while (result && result.status === "Generating") {
+        console.log("Status is 'Generating', checking again in 2 seconds...");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        result = await checkStatus(genId);
+    }
+
+    if (result && result.status === "Completed") {
+        console.log("Generation Finished!");
+        console.log("Audio URL:", result.audio_url);
+    } else if (result && result.status === "Failed") {
+        console.log("Generation Failed.");
+    } else {
+        console.log("Polling stopped due to an error or unknown status.");
+    }
+};
+
+pollForResult(GENERATION_ID);
+```
+
+</TabItem>
+</Tabs>
+
+-----
+
+## Responses
+
+### ✅ Success (Processing)
+
+While the audio is being generated, a `200 OK` response will show the status as `"Generating"`. The `audio_url` field will be `null`.
+
+```json title="Response: 200 OK (Status: Generating)"
+{
+  "generation_id": "base_27b4695b-017f-4b6e-8121-03264624479c",
+  "user_id": "user_xyz_789",
+  "status": "Generating",
+  "text_input": "Welcome to Audixa AI...",
+  "voice_id": "am_ethan",
+  "model": "base",
+  "audio_url": null,
+  "created_at": "2025-09-05T03:30:01Z"
+}
+```
+
+### ✅ Success (Completed)
+
+Once the job is done, a `200 OK` response will show the status as `"Completed"` and provide the permanent URL to the MP3 file in the `audio_url` field.
+
+```json title="Response: 200 OK (Status: Completed)"
+{
+  "generation_id": "base_27b4695b-017f-4b6e-8121-03264624479c",
+  "user_id": "user_xyz_789",
+  "status": "Completed",
+  "text_input": "Welcome to Audixa AI...",
+  "voice_id": "am_ethan",
+  "model": "base",
+  "audio_url": "https://media.audixa.ai/base_27b4695b....wav",
+  "created_at": "2025-09-05T03:30:01Z"
+}
+```
+
+### ❌ Errors
+
+This endpoint will return standard HTTP error codes:
+
+| Status Code | Error Code | Description |
+| :--- | :--- | :--- |
+| **`401 Unauthorized`** | `Invalid API Key` | Your `x-api-key` is missing or incorrect. |
+| **`403 Forbidden`** | `Access denied...` | The `generation_id` belongs to a different user, and you are not authorized to view it. |
+| **`404 Not Found`** | `Generation not found` | The `generation_id` you provided does not exist. |

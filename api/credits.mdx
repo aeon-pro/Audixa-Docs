@@ -1,0 +1,68 @@
+---
+title: Understanding Credits
+sidebar_position: 3
+---
+
+All API usage is measured and charged in **credits**. This page breaks down exactly how credits are calculated, what happens when you run out, and how to manage your balance.
+
+---
+
+## The Credit & Token Relationship
+
+The cost of every API call is calculated using two units: **Tokens** and **Credits**.
+
+* **1. Token:** A token is the basic unit of text measurement.
+    * **`1 Token = 1 UTF-8 Character`**
+    * This includes all letters, numbers, punctuation, and spaces. For example, the text `"Hello world!"` is 12 tokens. Your API cost is calculated based on the total token count (character count) of the `text` field you submit.
+
+* **2. Credit:** This is the currency you spend from your plan's balance. The "price" of each token in credits is determined by the `model` you select for the generation.
+
+---
+
+## Cost Calculation by Model
+
+The credit cost changes drastically between the Base and advance models. The advance model consumes credits at 4x the rate of the Base model.
+
+### Base Model
+When you set `"model": "base"`, you get the most efficient token-to-credit ratio.
+
+* **Formula:** `4 Tokens = 1 Credit`
+* **API Cost:** `Total Credits = Total Characters / 4`
+
+For example, a 2,000-character (token) text submission will cost **500 credits**.
+
+### Advance Model
+When you set `"model": "advance"` (used for premium voices and voice cloning), the cost is higher.
+
+* **Formula:** `1 Token = 1 Credit`
+* **API Cost:** `Total Credits = Total Characters`
+
+For example, the same 2,000-character (token) text submission will cost **2,000 credits**.
+
+---
+
+## Handling Insufficient Credits
+
+Before any generation task is started, the API calculates the estimated cost and checks your remaining credit balance.
+
+If the calculated cost is greater than your available balance, the API will immediately reject the request with the following error:
+
+* **Error Code:** `402 Payment Required`
+* **Response:** `{"detail": "Insufficient Balance"}`
+
+This allows you to catch billing errors programmatically without waiting for a task to fail.
+
+#### Plan Behavior on Empty Balance
+
+* **Basic & Starter Plans:** If your balance is zero, all API calls will return a `402` error. Your service is paused until your plan renews or you upgrade.
+* **Pro Plan:** You can enable **pay-as-you-go**. If your included credits run out, the API will continue to function by charging your payment method for any overage, based on the per-minute rates listed on our [Pricing Page](https://audixa.ai/pricing).
+
+---
+
+## How to Check Your Credit Balance
+
+Your remaining credit balance, billing history, and plan details are **not exposed via the API**.
+
+This information is considered sensitive and is only accessible through the secure Audixa Dashboard. Please instruct your users to manage their billing and check their credit balances by logging into their account.
+
+➡️ **Manage Billing & View Balance: [https://audixa.ai/dashboard/billing](https://audixa.ai/dashboard/billing)**

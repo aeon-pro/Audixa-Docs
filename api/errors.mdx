@@ -1,0 +1,101 @@
+---
+id: errors
+title: Error Codes
+sidebar_position: 5
+---
+This page provides a central reference for all common error codes returned by the Audixa AI API.
+
+-----
+
+
+## Error Codes
+
+We use standard HTTP response codes to indicate the success or failure of an API request. Codes in the `2xx` range signal success, `4xx` codes indicate a client-side error (a problem with your request), and `5xx` codes indicate a server-side error on our end.
+
+All error responses return a JSON object containing a `detail` key with a human-readable error message.
+
+```json
+{
+  "detail": "A specific message explaining what went wrong."
+}
+```
+
+-----
+
+## HTTP Status Code Summary
+
+### 400 Bad Request
+
+This is the most common client-side error. It means your request was malformed, incomplete, or contained invalid data. You should **not** retry the request without modifying it first.
+
+Common causes include:
+
+  * **Malformed JSON:** The JSON body you sent is syntactically incorrect.
+  * **Missing Required Field:** A required parameter like `text` or `voice` was not included in the request body.
+  * **Invalid Parameter Value:** You provided data that failed validation.
+      * `"detail": "Invalid voice ID"`
+      * `"detail": "Invalid Emotion | Expected: [...]"`
+      * `"detail": "Invalid Temperature | Expected Range: ..."`
+  * **Text Too Short:**
+      * `"detail": {"error": "Text must be at least 30 characters long."}`
+  * **Missing Query Parameter:** You called an endpoint (like `/voices`) without a required query parameter (like `model`).
+
+-----
+
+### 401 Unauthorized
+
+This means your request failed to authenticate. This is purely an issue with your API key.
+
+  * **`"detail": "Invalid API Key"`**
+    This response occurs if your `x-api-key` header is missing, incorrectly spelled, or contains a key that is not valid or has been revoked. Check your key and try again.
+
+-----
+
+### 402 Payment Required
+
+This error relates specifically to billing and your account balance.
+
+  * **`"detail": "Insufficient Balance"`**
+    This error is returned from the `POST /tts` endpoint when your account does not have enough credits to cover the cost of the requested generation. See our [Understanding Credits](https://www.google.com/search?q=./understanding-credits) guide for details.
+
+-----
+
+### 403 Forbidden
+
+This error means your request was authenticated successfully, but your account does not have permission to perform the requested action.
+
+This occurs in two main situations:
+
+1.  **Plan Restriction:** You are trying to use a feature your plan does not include.
+      * **`"detail": "This voice is only available for paid plans..."`**
+2.  **Access Denied:** You are trying to access a resource that belongs to another user.
+      * **`"detail": "Access denied for this generation"`** (This happens if you query the `/status` endpoint with a `generation_id` that belongs to a different account).
+
+-----
+
+### 404 Not Found
+
+This means the resource you are asking for does not exist.
+
+  * **`"detail": "Generation not found"`**
+    This is returned by `GET /status` when the provided `generation_id` does not match any job in our system. This can happen if the ID is incorrect or if the job is very old and has been purged.
+  * This will also be returned if you make a request to an undefined API path, such as `/v2/statuz`.
+
+-----
+
+### 429 Too Many Requests
+
+This means you have exceeded your rate limit (the number of API requests allowed in a given period). If you receive this error, you should stop sending requests and wait before retrying, ideally using an exponential backoff strategy. Please see our [Rate Limits](https://www.google.com/search?q=./rate-limits) page for details.
+
+-----
+
+### 500 Internal Server Error
+
+This means something went wrong on our end. These errors are rare, but if you receive one, it is not your fault.
+
+Common `detail` messages include:
+
+  * `"detail": "Error Occured While Updating Credits..."`
+  * `"detail": "Error Occured while Creating generation..."`
+
+If you receive a `500` error, the best practice is to wait a few moments and retry the request. If the error persists, please check our status page or contact support, as it indicates a problem with our services.

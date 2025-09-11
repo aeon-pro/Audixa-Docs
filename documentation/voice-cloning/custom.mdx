@@ -1,0 +1,67 @@
+---
+title: Custom Voices
+sidebar_position: 5
+---
+
+**Custom Voices** provide the ultimate solution for creating a unique, consistent, and high-quality voice that perfectly aligns with your brand or application. Unlike Instant Cloning, which creates a direct replica, the Custom Voice process allows you to design a new synthetic voice from audio sample.
+
+This guide covers how to create, use, and manage your Custom Voices.
+
+---
+
+## How to Create a Custom Voice
+
+The entire creation process is handled through the Audixa dashboard, making it simple to get started.
+
+1.  **Navigate to the Dashboard:** Log in to your account and go to the [**Custom Voices**](https://audixa.ai/dashboard/custom) page.
+2.  **Upload Audio:** Provide a high-quality audio sample of the voice you want to use as a base.
+3.  **Define Your Voice:** Assign a **Name** and **Gender** to your new voice for easy identification.
+4.  **Get Your Voice ID:** Once processed, your new Custom Voice will be added to your library and assigned a unique `Voice ID`.
+
+:::note
+Creating custom voices is only available via the Dashboard as of now, we are working to add the API endpoint for it.
+:::
+
+---
+
+## Using Your Custom Voice in the API
+
+To use your new voice programmatically, you must reference its unique `Voice ID` in your API calls and specify the **Advance Model**.
+
+1.  **Find Your Voice ID:** Locate your new voice on the dashboard's custom voice section and copy its `Voice ID` (e.g., `custom_voice_123`).
+2.  **Make the API Request:** In the body of your `POST /tts` request, set the `voice` parameter to your new ID and the `model` parameter to `"advance"`.
+
+```json title="Example POST /tts Request with a Custom Voice"
+{
+  "text": "This audio was generated with our unique and professional brand voice.",
+  "voice": "custom_voice_456",
+  "model": "advance",
+  "speed": 1.0
+}
+````
+
+-----
+
+## Security and Access
+
+Your Custom Voices are exclusive to your account.
+
+  - **Exclusive Access:** Only the account that created a Custom Voice can use its `Voice ID`.
+  - **Error on Misuse:** If another user attempts to use your Custom Voice ID in their API request, our system will return a `400 Bad Request` error with a `"detail": "Invalid voice ID"` message, ensuring your unique assets remain secure.
+
+-----
+
+## Billing
+
+Creations using a Custom Voice are powered by our **Advance Model**. All audio generated with a Custom Voice is charged at the same rate as the Advance Model.
+
+Please see our [**Understanding Credits**](/api/credits) guide for detailed calculation.
+
+-----
+
+## Managing Your Voices
+
+You have full control over your created voices. Management tasks, such as deleting a Custom Voice, can only be performed through the [**Custom Voices**](https://audixa.ai/dashboard/custom) section of your dashboard.
+:::note
+Changing of the voice, or metadata for a custom voice after creation is not allowed
+:::

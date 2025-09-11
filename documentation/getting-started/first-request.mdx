@@ -1,0 +1,157 @@
+---
+title: First API Request
+id: first-request
+sidebar_position: 3
+---
+
+# Make Your First API Request
+
+Once you're familiar with generating voices through the dashboard, you can start using the Audixa API to integrate text-to-speech into your own applications and workflows.
+
+This section shows you how to make your first programmatic request using the API.
+
+---
+
+## API Endpoint
+
+To generate speech, send a `POST` request to the following endpoint:
+
+```
+POST https://api.audixa.ai/v2/tts
+```
+
+---
+
+## Required Headers
+
+```http
+x-api-key: YOUR_API_KEY
+Content-Type: application/json
+```
+
+Replace `YOUR_API_KEY` with your actual API key from the [Dashboard](https://audixa.ai/dashboard/api).
+:::tip
+### How To Get Your API Key
+
+1. Log in to your [Dashboard](https://audixa.ai/dashboard).
+2. Navigate to the **API Keys** section.
+3. Click Regenerate.
+4. Copy your private API key.
+:::
+
+:::warning
+Do Not Expose **API Key** in Frontend Code
+Your API key contains sensitive credentials that can be abused if exposed.
+Always keep it securely stored and accessed from the backend/server.
+Exposing it in client-side code (HTML, JavaScript) may lead to:
+- Unauthorized usage
+- Data theft
+- Unexpected charges or bans
+- Security vulnerabilities
+
+**Best Practice:** Route all API requests through your backend to protect the key.
+:::
+
+---
+
+## Basic Example Request Body
+
+```json
+{
+  "text": "Welcome to Audixa AI, your affordable text-to-speech solution.",
+  "voice": "am_Ethan",
+  "model":"base",
+  "speed": 1
+}
+```
+- `text` - The content you want to convert to speech.
+- `voice` - Voice ID (see [Voice Library](https://audixa.ai/dashboard/library) for available voices).
+- `speed` - Speed of the speech. Range: 0.5 to 2
+
+
+:::info
+To access additional settings and learn more about the API, please refer to the [API Reference](/api/endpoints/tts).
+:::
+
+---
+
+
+## Code Examples
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="language">
+  <TabItem value="curl" label="cURL" default>
+
+```bash
+curl -X POST https://api.audixa.ai/v2/tts \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Welcome to Audixa AI, your affordable text-to-speech solution.",
+    "voice": "am_Ethan",
+    "model":"base",
+    "speed": 1
+  }'
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api.audixa.ai/v2/tts"
+headers = {
+    "x-api-key": "YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+data = {
+    "text": "Welcome to Audixa AI, your affordable text-to-speech solution.",
+    "voice": "am_Ethan",
+    "model":"base",
+    "speed": 1
+}
+
+response = requests.post(url, json=data, headers=headers)
+print(response.json())
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```js
+const response = await fetch("https://api.audixa.ai/v2/tts", {
+  method: "POST",
+  headers: {
+    "x-api-key": "YOUR_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    text: "Welcome to Audixa AI, your affordable text-to-speech solution.",
+    voice: "am_Ethan",
+    speed: 1
+  })
+});
+
+const result = await response.json();
+console.log(result);
+```
+
+  </TabItem>
+</Tabs>
+---
+## Check Generation Status
+
+Once you've made a request, the API will return a response containing a `generation_id` (if the request was successful).
+
+You can check the generation status in two ways:
+
+1. **From the Dashboard**  
+   Visit your [Dashboard](https://audixa.ai/dashboard/generations) to see the latest requests and download audio once ready.
+
+2. **Using the API**  
+   Use the `/status` endpoint to programmatically check the status of a request using the `request_id`.
+
+For details on how to use the status endpoint, see the [API Reference → Status Endpoint](/api/endpoints/status).

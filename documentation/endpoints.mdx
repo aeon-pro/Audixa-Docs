@@ -1,0 +1,77 @@
+---
+title: Endpoints Overview
+sidebar_position: 6
+---
+
+# API Endpoints Overview
+
+Below is a list of available API endpoints for interacting with the Audixa AI TTS service.
+
+### **Base URL:**
+```
+https://api.audixa.ai/v2/
+```
+
+Some endpoint requires authentication using your API key via the `x-api-key` header. Refer to the [Authentication](./authentication) section for details.
+
+---
+## `GET` `/`
+
+API index route (non-production use).
+
+- **Method:** `GET`
+- **Endpoint:** `/`
+- **Auth:** Not Required
+- **Response:** Basic info about the server and requester’s IP address
+
+---
+# Endpoints
+
+## `POST` `/tts`
+
+Generates speech audio from text using your selected voice.
+
+- **Method:** `POST`
+- **Endpoint:** `/tts`
+- **Auth:** Required (API Key)
+- **Body:** JSON with `text`, `voice`, `speed`, and `model` fields
+- **Response:** Returns a `generation_id` you can use to fetch generation status
+
+:::tip
+Use this to create audio files from your input text.
+:::
+
+---
+
+## `GET` `/status`
+
+Checks the status of a voice generation request.
+
+- **Method:** `GET`
+- **Endpoint:** `/status`
+- **Query Param:** `generation_id`
+- **Auth:** Required (API Key)
+- **Response:** Returns generation metadata including status and audio URL (if completed)
+
+:::note
+You can use this to check whether a voice generation is `Generating`, `Completed`, or `Failed`.
+:::
+
+---
+
+## `GET /voices`
+
+Returns the list of voices available for the specified model (`basic`, `advance`, etc).
+
+- **Method:** `GET`
+- **Endpoint:** `/voices`
+- **Query Param:** `model` (e.g. `basic`)
+- **Auth:** Required (API Key)
+- **Response:** List of voice metadata (IDs, names, accent, gender, and free/premium status)
+
+:::important
+Ensure you use the correct model name (like `basic`) when calling this endpoint.
+:::
+
+
+Continue reading the [API Reference](./api-reference) for detailed examples and parameter descriptions for each of these endpoints.

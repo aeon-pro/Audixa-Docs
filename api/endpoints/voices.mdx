@@ -1,0 +1,193 @@
+---
+title: Get Voices List
+sidebar_position: 5
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Use this endpoint to programmatically fetch a complete list of all voices available to your account. This includes both public preset voices and any custom voices or clones you have created.
+
+This is the programmatic alternative to viewing the [Voice Library in your dashboard](https://audixa.ai/dashboard/library). You must specify which model (`base` or `advance`) you want to retrieve voices for.
+
+---
+
+## Base URL
+
+```
+
+https://api.audixa.ai/v2
+
+````
+
+## Request
+
+# <span className="badge badge--secondary">GET</span> `/voices`
+
+---
+
+## Query Parameters
+
+This endpoint requires the model to be specified as a URL query parameter.
+
+| Parameter | Type   | Required | Description                                                    |
+| :-------- | :----- | :------- | :------------------------------------------------------------- |
+| **`model`** | string | Yes      | The model to fetch voices for. Valid options: `base` or `advance`. |
+
+---
+
+## Code Examples
+
+<Tabs groupId="language">
+  <TabItem value="curl" label="cURL" default>
+
+```bash
+# Example fetching all 'base' model voices
+# Replace YOUR_API_KEY with your actual key
+
+curl -X GET "https://api.audixa.ai/v2/voices?model=base" \
+     -H "x-api-key: YOUR_API_KEY"
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+api_url = "https://api.audixa.ai/v2/voices"
+api_key = "YOUR_API_KEY"
+
+headers = {
+    "x-api-key": api_key
+}
+params = {
+    "model": "base"  # or "advance"
+}
+
+response = requests.get(api_url, headers=headers, params=params)
+
+if response.status_code == 200:
+    result = response.json()
+    print(f"Found {len(result['voices'])} voices for model: {result['model']}")
+    
+    # Print the first voice in the list
+    if result['voices']:
+        print(result['voices'][0])
+else:
+    print(f"Error: {response.status_code}")
+    print(response.json())
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript (Node.js)">
+
+```js
+// This code must be run in a secure backend environment
+
+const fetch = require('node-fetch'); // or use native fetch in Node 18+
+
+const API_KEY = "YOUR_API_KEY";
+
+const getVoiceList = async (modelType) => {
+    const url = new URL("https://api.audixa.ai/v2/voices");
+    url.searchParams.append("model", modelType);
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: { "x-api-key": API_KEY }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} ${await response.text()}`);
+        }
+
+        const data = await response.json();
+        console.log(`Successfully fetched ${data.voices.length} voices for ${data.model} model.`);
+        console.log("First voice:", data.voices[0]);
+        return data;
+
+    } catch (error) {
+        console.error("Failed to fetch voices:", error.message);
+    }
+};
+
+// Fetch all voices for the 'base' model
+getVoiceList("base");
+```
+
+</TabItem>
+</Tabs>
+
+-----
+
+## Responses
+
+### ✅ Success
+
+A successful request returns a `200 OK` status code and a JSON object containing the `user_id`, the requested `model`, and a `voices` list.
+
+```json title="Response: 200 OK"
+{
+  "user_id": "user_xyz_789",
+  "model": "base",
+  "voices": [
+    {
+      "voice_id": "am_2riuownnf",
+      "name": "Ethan",
+      "gender": "Male",
+      "accent": "American",
+      "free": true,
+      "description": "VoiceID: am_2riuownnf"
+    },
+    {
+      "voice_id": "af_3kbq21leo",
+      "name": "Lily",
+      "gender": "Female",
+      "accent": "American",
+      "free": true,
+      "description": "VoiceID: af_3kbq21leo"
+    },
+    {
+      "voice_id": "bf_jp71qvnzd",
+      "name": "Alice",
+      "gender": "Female",
+      "accent": "British",
+      "free": true,
+      "description": "VoiceID: bf_jp71qvnzd"
+    },
+    {
+      "voice_id": "adv_user_clone_abc",
+      "name": "My Custom Voice",
+      "gender": "Male",
+      "accent": "Custom",
+      "free": false,
+      "description": "User cloned voice"
+    }
+    // ...etc, followed by all other available voices
+  ]
+}
+```
+
+### Voice Object Structure
+
+Each voice object in the `voices` list will contain the following fields:
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| **`voice_id`** | string | The unique ID for the voice. This is the value you must send in the `POST /tts` request. |
+| **`name`** | string | The display name of the voice (e.g., "Ethan"). |
+| **`gender`** | string | The gender of the voice (e.g., "Male", "Female"). |
+| **`accent`** | string | The accent of the voice (e.g., "American", "British", "Custom"). |
+| **`free`** | boolean | Indicates if the voice is available on the Basic (free) plan. `false` indicates a premium voice. |
+| **`description`**| string | A brief description of the voice. |
+
+<br />
+
+### ❌ Errors
+
+| Status Code | Error Code | Description |
+| :--- | :--- | :--- |
+| **`400 Bad Request`** | *(various)* | The `model` query parameter is missing or invalid. |
+| **`401 Unauthorized`** | `Invalid API Key` | Your `x-api-key` is missing or incorrect. |

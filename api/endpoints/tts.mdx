@@ -1,0 +1,179 @@
+---
+id: tts
+title: Start TTS
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+This is the main endpoint for creating new text-to-speech tasks.
+
+When you send a request, the API validates your inputs and queues the generation task. Because this process is **asynchronous**, the endpoint immediately returns a `generation_id` upon success.
+
+You must then use this ID to poll the [**Status Endpoint**](./status) to retrieve your audio URL once it's ready.
+
+---
+## Base URL
+```
+https://api.audixa.ai/v2
+```
+## Request
+## <span className="badge badge--primary">POST</span> `/tts`
+---
+
+## Request Body
+
+All parameters are sent as a JSON object in the request body.
+
+| Parameter | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| **`text`** | string | Yes | The text you want to convert to speech. Must be at least 30 characters. |
+| **`voice`** | string | Yes | The `Voice ID` to use for generation. See the [Voice Library](https://audixa.ai/dashboard/library) for all available IDs. |
+| **`model`** | string | No | The model to use. Can be `"base"` or `"advance"`. Defaults to `"base"`. |
+| **`speed`** | number | No | Playback speed. Can range from `0.5` to `2.0`. Defaults to `1.0`. |
+
+---
+
+### Advance Model Parameters
+
+These parameters are only used if you set **`"model": "advance"`**. They will be ignored by the Base model. See our [Models Guide](/models) for details.
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`emotion`** | string | `"neutral"` | The emotion to apply. Valid options: `"neutral"`, `"happy"`, `"sad"`, `"angry"`, `"surprised"`. |
+| **`temperature`**| number | `0.9` | Controls randomness. Lower values are more deterministic. Range: `0.7` to `0.9`. |
+| **`top_p`** | number | `0.9` | Nucleus sampling. Range: `0.7` to `0.98`. |
+| **`do_sample`** | boolean | `false` | Set to `true` to enable sampling for more varied outputs. |
+
+---
+
+## Code Examples
+
+<Tabs groupId="language">
+  <TabItem value="curl" label="cURL" default>
+
+```bash
+curl -X POST "https://api.audixa.ai/v2/tts" \
+     -H "x-api-key: YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+          "text": "Welcome to Audixa AI, your affordable and powerful text-to-speech solution.",
+          "voice": "am_ethan",
+          "model": "base",
+          "speed": 1.1
+        }'
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+api_url = "https://api.audixa.ai/v2/tts"
+api_key = "YOUR_API_KEY"
+
+headers = {
+    "x-api-key": api_key,
+    "Content-Type": "application/json"
+}
+
+data = {
+    "text": "Welcome to Audixa AI, your affordable and powerful text-to-speech solution.",
+    "voice": "am_ethan", # Voice IDs are case-insensitive
+    "model": "base",
+    "speed": 1.1
+}
+
+response = requests.post(api_url, headers=headers, json=data)
+
+if response.status_code == 201:
+    result = response.json()
+    print("Generation started:", result)
+    # Save this ID: result['generation_id']
+else:
+    print(f"Error: {response.status_code}")
+    print(response.json())
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript (Node.js)">
+
+```js
+// This code must be run in a secure backend environment
+// to protect your API key.
+
+const fetch = require('node-fetch'); // or use native fetch in Node 18+
+
+const API_URL = "https://api.audixa.ai/v2/tts";
+const API_KEY = "YOUR_API_KEY";
+
+const generateAudio = async () => {
+  const payload = {
+    text: "Welcome to Audixa AI, your affordable and powerful text-to-speech solution.",
+    voice: "am_ethan",
+    model: "base",
+    speed: 1.1
+  };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "x-api-key": API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (response.status === 201) {
+      console.log("Generation started:", result);
+      // Save this ID: result.generation_id
+    } else {
+      console.error(`Error (${response.status}):`, result.detail);
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  }
+};
+
+generateAudio();
+```
+
+</TabItem>
+</Tabs>
+
+-----
+
+## Responses
+
+### ✅ Success
+
+A successful request will return a `201 Created` status code along with the unique ID for your generation task.
+
+```json title="Response: 201 Created"
+{
+  "generation_id": "base_27b4695b-017f-4b6e-8121-03264624479c"
+}
+```
+
+### ❌ Errors
+
+This endpoint will return standard HTTP error codes:
+
+| Status Code | Error Code | Description |
+| :--- | :--- | :--- |
+| **`400 Bad Request`** | `Invalid voice ID` | The `voice` ID you sent does not exist. |
+| **`400 Bad Request`** | `Invalid Emotion` | You sent an emotion not in the allowed list for the Advance model. |
+| **`400 Bad Request`** | `Text must be...` | Your text input was too short. |
+| **`401 Unauthorized`** | `Invalid API Key` | Your `x-api-key` is missing or incorrect. |
+| **`402 Payment Required`**| `Insufficient Balance` | Your account does not have enough credits to perform this generation. |
+| **`403 Forbidden`** | `This voice is...` | Your plan does not have access to this premium voice. |
+
+-----
+
+## Next Steps
+
+Once you have your `generation_id`, you must poll the [**Get Status Endpoint**](./status) to check on the progress and retrieve your audio file.
