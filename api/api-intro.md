@@ -78,4 +78,4 @@ This reference guide is organized into the following main endpoints:
 
 -----
 
-Ready to get started? Head over to the [**First API Request**](./first-request) guide to generate your first audio file.
+Ready to get started? Head over to the [**First API Request**](/getting-started/first-request) guide to generate your first audio file.
