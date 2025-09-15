@@ -1,0 +1,38 @@
+---
+id: ratelimits
+title: Rate Limits
+---
+
+To ensure stability and fair use for all users, the Audixa AI API imposes rate limits on incoming requests. These limits restrict the number of API calls you can make in a given period.
+
+Limits are applied **per API key**. Per your API's configuration, these limits are the same for all subscription plans.
+
+---
+
+## Hitting the Limit
+
+If your application exceeds the allowed number of requests for an endpoint, the API will stop processing further requests and respond with the following HTTP status code, as defined in our API's error handler:
+
+* **HTTP Status:** `429 Too Many Requests`
+* **Response Body:** `{"detail": "Too Many Requests", "error": "limit description"}`
+
+When you receive this error, you must stop sending requests for a short period before retrying. We strongly recommend implementing an **exponential backoff** strategy, which involves waiting for progressively longer periods between retries (e.g., wait 1 second, then 2s, then 4s).
+
+---
+
+## Public Endpoint Limits
+
+The following limits are applied to our public, key-authenticated API endpoints.
+
+| Endpoint | Limit |
+| :----- | :----- |
+| **`POST /v2/tts`** | **20 per minute** <br/> **500 per day** |
+| **`GET /v2/status`**| **60 per minute** | 
+| **`GET /v2/voices`** | **10 per minute** | 
+| **Health Checks** <br/> (`/`, `/v2/`, `/health`) | **100 per minute** |
+
+---
+
+## Increasing Limits
+
+If your application has a high-traffic use case that requires higher request volumes than our standard limits, please contact our sales team to discuss an **Enterprise plan** with custom-tailored rate limits.

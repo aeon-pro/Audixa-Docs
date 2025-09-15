@@ -56,7 +56,7 @@ This means your request failed to authenticate. This is purely an issue with you
 This error relates specifically to billing and your account balance.
 
   * **`"detail": "Insufficient Balance"`**
-    This error is returned from the `POST /tts` endpoint when your account does not have enough credits to cover the cost of the requested generation. See our [Understanding Credits](https://www.google.com/search?q=./understanding-credits) guide for details.
+    This error is returned from the `POST /tts` endpoint when your account does not have enough credits to cover the cost of the requested generation. See our [Understanding Credits](./credits) guide for details.
 
 -----
 
@@ -79,13 +79,13 @@ This means the resource you are asking for does not exist.
 
   * **`"detail": "Generation not found"`**
     This is returned by `GET /status` when the provided `generation_id` does not match any job in our system. This can happen if the ID is incorrect or if the job is very old and has been purged.
-  * This will also be returned if you make a request to an undefined API path, such as `/v2/statuz`.
+  * This will also be returned if you make a request to an undefined API path, such as `/v2/status`.
 
 -----
 
 ### 429 Too Many Requests
 
-This means you have exceeded your rate limit (the number of API requests allowed in a given period). If you receive this error, you should stop sending requests and wait before retrying, ideally using an exponential backoff strategy. Please see our [Rate Limits](https://www.google.com/search?q=./rate-limits) page for details.
+This means you have exceeded your rate limit (the number of API requests allowed in a given period). If you receive this error, you should stop sending requests and wait before retrying, ideally using an exponential backoff strategy. Please see our [Rate Limits](./ratelimits) page for details.
 
 -----
 

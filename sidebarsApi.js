@@ -46,6 +46,10 @@ const sidebars = {
     {
       type:'doc',
       id:'errors'
+    },
+    {
+      type:'doc',
+      id:'ratelimits'
     }
   ]
 };
