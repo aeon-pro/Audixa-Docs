@@ -1,0 +1,48 @@
+---
+id: view-generations
+title: My Generations
+---
+
+The **Generations** page is your central hub for viewing and managing your complete text-to-speech generation history. Every time you create audio, whether through the dashboard or the API, a record of that job appears here.
+
+---
+
+## Audio File Retention Policy
+
+:::warning Important Data Policy
+Audio files generated on our platform are only stored and available for download for **7 days**.
+
+After 7 days, the generation *record* (including the text, status, and voice used) will remain in your history, but the audio file itself will be purged and will no longer be downloadable. Please be sure to download any essential audio files within this 7-day window.
+:::
+
+---
+
+## Filtering and Searching History
+
+This page provides several tools to help you find specific generation tasks quickly.
+
+* **Filter by Status:** This dropdown allows you to narrow the list to only show jobs with a specific status:
+    * **Completed:** Successfully generated audio.
+    * **Generating:** Jobs that are still in progress.
+    * **Failed:** Jobs that could not be completed.
+* **Filter by Model:** Lets you see only the generations created with either the `Base` or `Advanced` model.
+* **Search:** A free-text search bar that allows you to find a generation by searching the text content you submitted.
+* **Clear Filters:** This button will reset all active filters and searches, showing you the complete, unfiltered history again.
+
+---
+
+## Generation Details
+
+Each item in the list provides a complete summary of the generation task, including:
+* The original **text input**.
+* The **Voice ID** used.
+* The **Model** used (`Base` or `Advanced`).
+* The creation **date**.
+* The final **Status** (Completed, Generating, or Failed).
+* A **Download Button** to save the MP3 file (this will only be active for "Completed" generations that are less than 7 days old).
+
+---
+
+## Pagination
+
+Your generation history is split into multiple pages. You can use the **Previous** and **Next** buttons at the bottom of the list to navigate through your older records.

@@ -57,13 +57,30 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Voice Cloning',
+      label: 'Features',
       collapsible: true,
       collapsed: false,
       items: [
-        'voice-cloning/instant',
-        'voice-cloning/custom'
+        'features/tts',
+        'features/voice-library',
+        {
+          type: 'category',
+          label: 'Voice Cloning',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            'voice-cloning/instant',
+            'voice-cloning/custom'
 
+            // {
+            //   type: 'category',
+            //   label: 'Introduction',
+            //   items: ['why', 'how'],
+            // },
+          ],
+        },
+        'features/view-generations',
+        'features/billing'
         // {
         //   type: 'category',
         //   label: 'Introduction',
@@ -71,10 +88,7 @@ const sidebars = {
         // },
       ],
     },
-    {
-      type: 'doc',
-      id: 'voice-library', // document ID
-    },
+    
     {
       type: 'doc',
       id: 'models', // document ID
