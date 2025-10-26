@@ -26,18 +26,18 @@ The credit cost changes drastically between the Base and advance models. The adv
 ### Base Model
 When you set `"model": "base"`, you get the most efficient token-to-credit ratio.
 
-* **Formula:** `4 Tokens = 1 Credit`
+* **Formula:** `1 Tokens = 1 Credit`
 * **API Cost:** `Total Credits = Total Characters / 4`
 
-For example, a 2,000-character (token) text submission will cost **500 credits**.
+For example, a 2,000-character (token) text submission will cost **2000 credits**.
 
 ### Advance Model
 When you set `"model": "advance"` (used for premium voices and voice cloning), the cost is higher.
 
-* **Formula:** `1 Token = 1 Credit`
+* **Formula:** `1 Token = 4 Credit`
 * **API Cost:** `Total Credits = Total Characters`
 
-For example, the same 2,000-character (token) text submission will cost **2,000 credits**.
+For example, the same 2,000-character (token) text submission will cost **8,000 credits**.
 
 ---
 
