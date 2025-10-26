@@ -17,12 +17,12 @@ All audio generation is measured in **credits**. Before you choose a plan, it's 
 -   **Audio Estimate:** On average, it takes about **1,000 tokens** to generate **1 minute** of audio.
 
 The cost in credits depends on the model you use:
-* **Basic TTS:** 1 Credit = 4 Tokens (Lower credit cost, ideal for high volume)
-* **Advance TTS:** 1 Credit = 1 Token (Higher quality and cloning, higher credit cost)
+* **Basic TTS:** 1 Credit = 1 Tokens (Lower credit cost, ideal for high volume)
+* **Advance TTS:** 4 Credits = 1 Token (Higher quality and cloning, higher credit cost)
 
 For example, 10,000 credits can be used for either:
-* **~40 minutes** of Basic TTS (10,000 credits * 4 tokens/credit = 40,000 tokens)
-* **~10 minutes** of Advance TTS (10,000 credits * 1 token/credit = 10,000 tokens)
+* **~40 minutes** of Basic TTS (40,000 credits * 1 tokens/credit = 40,000 tokens)
+* **~10 minutes** of Advance TTS (40,000 credits * 0.25 token/credit = 10,000 tokens)
 
 ---
 
@@ -31,10 +31,10 @@ For example, 10,000 credits can be used for either:
 | Feature | Basic | Starter | Pro | Enterprise |
 | :--- | :--- | :--- | :--- | :--- |
 | **Price** | **$0** | **$14** | **$29** <span className="badge badge--danger" style={{marginLeft: '5px'}}>10% Off</span> | **Custom** |
-| **Credits Included** | 10K | 500K | 1.5M | Custom |
+| **Credits Included** | 40K | 4M | 10M | Custom |
 | | | | | |
-| **Included Basic TTS** | ~40 minutes | ~2,000 minutes | ~6,000 minutes | Custom |
-| **Included Advance TTS** | ~10 minutes | ~500 minutes | ~1,500 minutes | Custom |
+| **Included Basic TTS** | ~40 minutes | ~4,000 minutes | ~10,000 minutes | Custom |
+| **Included Advance TTS** | ~10 minutes | ~1000 minutes | ~2,500 minutes | Custom |
 | | | | | |
 | **Custom Voices** | 3 | 10 | 30 | Custom |
 | **Instant Voice Cloning**| ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
@@ -43,8 +43,8 @@ For example, 10,000 credits can be used for either:
 | **Advance Analytics** | ❌ No | ❌ No | ✅ Yes | ✅ Yes |
 | | | | | |
 | **Pay-As-You-Go Overage**| ❌ No | ❌ No | ✅ Yes | ✅ Yes |
-| *Basic TTS Overage* | - | - | $0.008 / min | Custom |
-| *Advance TTS Overage*| - | - | $0.06 / min | Custom |
+| *Basic TTS Overage* | - | - | $0.003 / min | Custom |
+| *Advance TTS Overage*| - | - | $0.02 / min | Custom |
 | | | | | |
 | **Dedicated Manager** | ❌ No | ❌ No | ❌ No | ✅ Yes |
 | **99.9% Uptime SLA** | ❌ No | ❌ No | ❌ No | ✅ Yes |
@@ -55,13 +55,13 @@ For example, 10,000 credits can be used for either:
 ## Frequently Asked Questions
 
 ### What are credits and how are they calculated?
-Credits are used to generate audio. The conversion from credits to tokens depends on the model you use. For our basic text-to-speech (TTS) models, **1 credit equals 4 tokens**. For our advance TTS models, **1 credit equals 1 token**. On average, you can expect to use approximately 1,000 tokens for every minute of audio you generate.
+Credits are used to generate audio. The conversion from credits to tokens depends on the model you use. For our basic text-to-speech (TTS) models, **1 credit equals 1 tokens**. For our advance TTS models, **4 credits equals 1 token**. On average, you can expect to use approximately 1,000 tokens for every minute of audio you generate.
 
 ### How many tokens does it take to generate one minute of audio?
 On average, it takes about **1,000 tokens** to generate one minute of spoken audio. This means you can estimate your audio limits based on your total tokens or credits:
-- For Basic TTS: 1 credit = 4 tokens
-- For Advance TTS: 1 credit = 1 token
-For example, 10,000 tokens will generate approximately 10 minutes of audio.
+- For Basic TTS: 1 credit = 1 tokens
+- For Advance TTS: 4 credit = 1 token
+For example, 40,000 tokens will generate approximately 40 minutes of audio.
 
 ### How do I know how many tokens my text will use?
 Each token equals one UTF-8 character, including letters, numbers, punctuation, and spaces. For example, “Hello world!” is 12 tokens. You can estimate your usage using any standard character counter.
@@ -73,7 +73,7 @@ On the **Basic** and **Starter** plans, your service will be paused once you run
 Yes! You can use credits for either Basic TTS (more time per credit) or Advance TTS (higher quality, fewer minutes per credit). You choose which model to use every time you make an API request.
 
 ### Is the Basic plan really free?
-Yes! Our **Basic** plan is completely free. It gives you **10,000 credits** to test out our platform, with no credit card required. This is enough for about 40 minutes of basic TTS or 10 minutes of advance TTS.
+Yes! Our **Basic** plan is completely free. It gives you **40,000 credits** to test out our platform, with no credit card required. This is enough for about 40 minutes of basic TTS or 10 minutes of advance TTS.
 
 ### Do you support white-label or custom enterprise integrations?
 Absolutely! The **Enterprise** plan includes full white-label capabilities, custom admin panels, OEM integration, and tailored usage limits. Contact Sales for custom pricing and features.
